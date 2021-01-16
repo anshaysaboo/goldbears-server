@@ -5,6 +5,7 @@ const crypto = require("crypto");
 
 const keys = require("../config/keys");
 
+// A User represents a single user of the app, and contains user data
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
