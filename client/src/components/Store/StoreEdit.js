@@ -71,9 +71,11 @@ class StoreEdit extends Component {
   }
 
   validate(values) {
-    for (const val of Object.values(values)) {
-      if (val == null) return false;
-      if (typeof val === "string" && !val.trim()) return false;
+    if (!values.title) {
+      values.title = this.props.store.title;
+    }
+    if (!values.description) {
+      values.description = this.props.store.description;
     }
     return true;
   }

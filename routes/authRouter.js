@@ -12,5 +12,6 @@ const router = express.Router();
 router.post("/register", Auth.register);
 router.get("/user", authenticate, Auth.getUser);
 router.post("/login", Auth.login);
+router.post("/register/store", Auth.registerAndMakeStore);
 
 module.exports = router;
