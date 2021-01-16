@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { customAlphabet } = require("nanoid");
 
-const { getImageSignedURL } = require("../utils/getImagesForProducts.js");
+const { getImageSignedURL, uploadImage } = require("../utils/S3Utils.js");
 const getImagesForProducts = require("../utils/getImagesForProducts.js");
 
 const User = mongoose.model("users");
@@ -91,7 +91,7 @@ exports.getProducts = async (req, res) => {
   const storeId = req.storeId;
   try {
     const products = await Product.find({ storeId });
-    res.send(products);
+    res.send(await getImagesForProducts(products));
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: err.message });
@@ -119,6 +119,25 @@ exports.getDetails = async (req, res) => {
     }
 
     res.send(store);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// @route GET /api/store
+// @desc Returns the basic information about this store
+// @access public
+exports.getStore = async (req, res) => {
+  try {
+    let store = await Store.findById(req.storeId);
+    const storeJson = store.toJSON();
+
+    if (store.imageKey) {
+      storeJson.imageUrl = await getImageSignedURL(store.imageKey);
+    }
+
+    res.send(storeJson);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: err.message });

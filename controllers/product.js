@@ -3,7 +3,7 @@ const { customAlphabet } = require("nanoid");
 
 const User = mongoose.model("users");
 const Product = mongoose.model("products");
-
+const { uploadImage, deleteImage } = require("../utils/S3Utils.js");
 const getImagesForProducts = require("../utils/getImagesForProducts.js");
 
 const nanoid = customAlphabet(
@@ -24,7 +24,17 @@ exports.create = async (req, res) => {
       imageKey = imageData.key || "";
     }
 
-    await new Product({ ...req.body, imageKey, storeId }).save();
+    const tagsString = req.body.tags;
+    if (!tagsString)
+      return res.status(400).send({ message: "Must provide tags!" });
+    delete req.body.tags;
+
+    await new Product({
+      ...req.body,
+      tags: tagsString.split(","),
+      imageKey,
+      storeId,
+    }).save();
     res.send({ message: "Successfully created the product!" });
   } catch (err) {
     console.error(err);
@@ -94,7 +104,7 @@ exports.delete = async (req, res) => {
     }
 
     await Product.deleteOne({ _id: id });
-    res.send({ message: "Product successfully deleted." });
+    res.send(await Product.find({ storeId: req.storeId }));
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: err.message });

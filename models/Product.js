@@ -22,14 +22,14 @@ const productSchema = new mongoose.Schema({
     required: "Price is required",
   },
 
-  shipsWithin: {
-    type: Number,
-    required: "shipsWithin is required",
-  },
-
   charity: {
     type: String,
     required: "Charity is required.",
+  },
+
+  charityLink: {
+    type: String,
+    required: "Link to charity is required.",
   },
 
   percentToCharity: {

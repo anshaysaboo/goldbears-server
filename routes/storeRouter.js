@@ -16,5 +16,6 @@ router.post("/", authenticate, upload.single("image"), Store.create);
 router.put("/", authenticate, upload.single("image"), Store.update);
 router.get("/products", authenticate, verifyStore, Store.getProducts);
 router.get("/:id", Store.getDetails);
+router.get("/", authenticate, verifyStore, Store.getStore);
 
 module.exports = router;
