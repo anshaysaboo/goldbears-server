@@ -18,7 +18,7 @@ const storeSchema = new mongoose.Schema({
   ownerId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: "User",
+    ref: "users",
     unique: true,
   },
 });

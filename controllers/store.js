@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const { customAlphabet } = require("nanoid");
 
+const { getImageSignedURL } = require("../utils/getImagesForProducts.js");
+const getImagesForProducts = require("../utils/getImagesForProducts.js");
+
 const User = mongoose.model("users");
 const Store = mongoose.model("stores");
 const Product = mongoose.model("products");
@@ -89,6 +92,33 @@ exports.getProducts = async (req, res) => {
   try {
     const products = await Product.find({ storeId });
     res.send(products);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// @route GET /api/store/:id
+// @desc Gets the details about this store, as well as a full list of the products it sells
+// @access public
+exports.getDetails = async (req, res) => {
+  try {
+    let store = await Store.findById(req.params.id).populate(
+      "ownerId",
+      "username firstName lastName"
+    );
+    store = store.toJSON();
+    if (!store) return res.status(404).send({ message: "Invalid store ID." });
+
+    const products = await Product.find({ storeId: store._id });
+    store.products = await getImagesForProducts(products);
+
+    if (store.imageKey) {
+      const url = await getImageSignedURL(store.imageKey);
+      store.imageUrl = url;
+    }
+
+    res.send(store);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: err.message });
