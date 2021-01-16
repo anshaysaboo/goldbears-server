@@ -3,6 +3,8 @@ import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { Layout, Menu, Row } from "antd";
 
+import logo from "../../assets/img/logo.png";
+
 import { MENU_ITEMS } from "./Menu/menuItems";
 import { DASHBOARD_ROUTES } from "./Menu/routes";
 import { logout } from "../../actions/authActions";
@@ -25,7 +27,9 @@ class Dashboard extends Component {
           }}
         >
           <div className="logo" style={{ height: "60px", padding: "15px" }}>
-            <center></center>
+            <center>
+              <img src={logo} style={{ height: "70px" }} alt="Logo" />
+            </center>
           </div>
           <Row justify="end">
             <Menu theme="light" mode="inline">

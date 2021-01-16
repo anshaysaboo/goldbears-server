@@ -13,6 +13,7 @@ import {
 } from "antd";
 import { login } from "../../actions/authActions";
 import { connect } from "react-redux";
+import logo from "../../assets/img/logo.png";
 
 class Login extends Component {
   constructor(props) {
@@ -54,6 +55,9 @@ class Login extends Component {
               <center>
                 <Card align="middle">
                   <center>
+                    <img src={logo} style={{ width: "20%" }} alt="Logo" />
+                    <br />
+                    <br />
                     <Typography.Title level={1}>Sustainabear</Typography.Title>
                     <p>Log into the vendor dashboard.</p>
                   </center>
