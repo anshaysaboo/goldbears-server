@@ -2,4 +2,5 @@
 module.exports = (app) => {
   app.use("/api/auth", require("./authRouter.js"));
   app.use("/api/store", require("./storeRouter.js"));
+  app.use("/api/products", require("./productRouter.js"));
 };

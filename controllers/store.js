@@ -3,13 +3,14 @@ const { customAlphabet } = require("nanoid");
 
 const User = mongoose.model("users");
 const Store = mongoose.model("stores");
+const Product = mongoose.model("products");
 
 const nanoid = customAlphabet(
   "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
   12
 );
 
-// @route POST /api/stores/
+// @route POST /api/store/
 // @desc Creates a new store for the current user with the given information
 // @access Private
 exports.create = async (req, res) => {
@@ -18,7 +19,7 @@ exports.create = async (req, res) => {
     // Check if store has already been created
     const store = await Store.findOne({ ownerId });
     if (store)
-      res
+      return res
         .status(400)
         .send({ message: "A store for this user has already been created." });
 
@@ -37,7 +38,7 @@ exports.create = async (req, res) => {
   }
 };
 
-// @route PUT /api/stores/
+// @route PUT /api/store/
 // @desc Updates the details for a store
 // @access Private
 exports.update = async (req, res) => {
@@ -47,7 +48,7 @@ exports.update = async (req, res) => {
     // Check if store has been created
     const store = await Store.findOne({ ownerId });
     if (!store)
-      res
+      return res
         .status(400)
         .send({ message: "A store for this user does not exist." });
 
@@ -74,6 +75,20 @@ exports.update = async (req, res) => {
       }
     );
     res.send(storeData);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// @route GET /api/store/products/
+// @desc Get a list of all products that are currently listed in the user's store.
+// @access Private
+exports.getProducts = async (req, res) => {
+  const storeId = req.storeId;
+  try {
+    const products = await Product.find({ storeId });
+    res.send(products);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: err.message });
