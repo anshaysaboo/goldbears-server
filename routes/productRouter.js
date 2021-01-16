@@ -9,7 +9,6 @@ const Product = require("../controllers/product.js");
 
 // ROUTES FOR /api/store
 // Handles creating and updating of stores
-
 const router = express.Router();
 
 router.post(
@@ -27,5 +26,7 @@ router.put(
   Product.update
 );
 router.delete("/:id", authenticate, verifyStore, Product.delete);
+
+router.get("/", Product.search);
 
 module.exports = router;

@@ -4,6 +4,8 @@ const { customAlphabet } = require("nanoid");
 const User = mongoose.model("users");
 const Product = mongoose.model("products");
 
+const getImagesForProducts = require("../utils/getImagesForProducts.js");
+
 const nanoid = customAlphabet(
   "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
   12
@@ -96,5 +98,23 @@ exports.delete = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: err.message });
+  }
+};
+
+// @route GET /api/products/search/?query="example"
+// @desc Search for products with the given query
+// @access Public
+exports.search = async (req, res) => {
+  try {
+    const products = await Product.find(
+      { $text: { $search: req.query.query } },
+      { score: { $meta: "textScore" } },
+      { limit: 10 }
+    )
+      .populate("storeId", "title description")
+      .sort({ score: { $meta: "textScore" } });
+    res.status(200).send(await getImagesForProducts(products));
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
