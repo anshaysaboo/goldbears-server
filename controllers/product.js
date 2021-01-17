@@ -128,3 +128,18 @@ exports.search = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// @route GET /api/products/feed
+// @desc Fetch a list of the first 12 products on the application
+// @access public
+exports.getFeed = async (req, res) => {
+  try {
+    const products = await Product.find({}, {}, { limit: 12 }).populate(
+      "storeId",
+      "title description"
+    );
+    res.status(200).send(await getImagesForProducts(products));
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

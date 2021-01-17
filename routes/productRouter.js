@@ -26,7 +26,7 @@ router.put(
   Product.update
 );
 router.delete("/:id", authenticate, verifyStore, Product.delete);
-
+router.get("/feed", Product.getFeed);
 router.get("/", Product.search);
 
 module.exports = router;
